@@ -10,92 +10,112 @@ import java.util.Collections;
 
 
 public class Bingo {
-    private ArrayList<Integer> bombo;
-    private ArrayList<Integer> bolas_extraídas;
-    private ArrayList<Carton> cartones;
-    private ArrayList<Carton> cartones_ganadores;
+    private ArrayList<Integer> bombo = new ArrayList<Integer>();
+    private ArrayList<Integer> bolas_extraidas = new ArrayList<Integer>();
+    private ArrayList<Carton> cartones = new ArrayList<Carton>();
+    private ArrayList<Carton> cartones_ganadores = new ArrayList<Carton>();
     private boolean finalizado;
-    private int bola_mayor;
-    private int tamaño_del_carton;
+    private static final int bola_mayor=30;
+    private static final int tamaño_del_carton=9;
 
     public Bingo() {
-        this.bombo = new ArrayList<Integer>();
+        for(int i=1;i<=bola_mayor;i++){
+            this.bombo.add(i);
+        }
     }
 
     
     public boolean Comprobar_carton(Carton carton){
-       
-        for(int x=0;x<bolas_extraídas.size();x++) {
-            if(carton==bolas_extraídas){
-                return true;
+       int c = 0;
+        for(int to: this.bolas_extraidas) {
+            for(int yo: carton.getNumero()){
+                if(yo==to){
+                c++;
             }
-        }
-        return false;
+         }
+     }
+        if(c==carton.getTamaño()){
+                return true;
+        }else{
+              return false;
+            }
     }
     
+    
+    
     public Carton Generar_un_cartón(){
-        Carton carton=null;
+        //ArrayList<Integer> carton = new ArrayList<Integer>(); 
         ArrayList<Integer> numeros = new ArrayList<Integer>();
         
         for(int i=1; i<=30; i++){
             numeros.add(i);
+            //System.out.println(numeros.get(i-1));
         }
         Collections.shuffle(numeros);
         
-        ArrayList<Integer> nmeros_carton = new ArrayList<Integer>();
-        int i = 0;
-        for(carton ficha : numeros){
-            if(i<9){
-                nmeros_carton.add(ficha);
-        i++;
-        carton.addall(nmeros_carton);
-        
-        this.cartones.add(carton);
-        
-        
-        return carton;
-    }
-    
-    
-        
-    
-    
-    /*for(int i=1;i<=30;i++){
-            this.bombo.add(i);
+        int[]nmeros_carton = new int[tamaño_del_carton];
+        for(int j=0; j<tamaño_del_carton; j++){
+               nmeros_carton[j] = numeros.get(j);
+               numeros.remove(j);  
+               //System.out.println(nmeros_carton[j]);
         }
-          /*this.bombo.add(1);
-            this.bombo.add(2);
-            this.bombo.add(3);
-            this.bombo.add(4);
-            this.bombo.add(5);
-            this.bombo.add(6);
-            this.bombo.add(7);
-            this.bombo.add(8);
-            this.bombo.add(9);
-            this.bombo.add(10);
-            this.bombo.add(11);
-            this.bombo.add(12);
-            this.bombo.add(13);
-            this.bombo.add(14);
-            this.bombo.add(15);
-            this.bombo.add(16);
-            this.bombo.add(17);
-            this.bombo.add(18);
-            this.bombo.add(19);
-            this.bombo.add(20);
-            this.bombo.add(21);
-            this.bombo.add(22);
-            this.bombo.add(23);
-            this.bombo.add(24);
-            this.bombo.add(25);
-            this.bombo.add(26);
-            this.bombo.add(27);
-            this.bombo.add(28);
-            this.bombo.add(29);
-            this.bombo.add(30);*/
+        
+        //carton.add(nmeros_carton);
+        
+        Carton carto = new Carton(nmeros_carton);
+        //carto.imprimirNumero();
+        cartones.add(carto);
+        
+        
+        return carto;
+    }
 
+    public int Extraer_una_bola(){
+        int bolaExtraida;
+        if(this.bombo.isEmpty()){
+            this.finalizado = true;
+        }
+        
+        if(finalizado == false){
+             java.util.Collections.shuffle(this.bombo);
+             bolaExtraida = this.bombo.get(0);
+             this.bolas_extraidas.add(bolaExtraida);
+             this.bombo.remove(0);
+             for(Carton carton : this.cartones){
+                 if(this.Comprobar_carton(carton)){
+                     this.cartones_ganadores.add(carton);
+                     this.finalizado = true;
+                 }
+             }
+        }else{
+            bolaExtraida = 0;
+        }
+        
+        return bolaExtraida; 
+    }
+ 
+    public ArrayList<Integer> getBombo() {
+        return bombo;
+    }
+    public ArrayList<Integer> getBolas_extraidas() {
+        return bolas_extraidas;
+    }
+    public ArrayList<Carton> getCartones() {
+        return cartones;
+    }
+    public ArrayList<Carton> getCartones_ganadores() {
+        return cartones_ganadores;
+    }
+    public boolean isFinalizado() {
+        return finalizado;
+    }
+    public static int getBola_mayor() {
+        return bola_mayor;
+    }
 
-    
+    public static int getTamaño_del_carton() {
+        return tamaño_del_carton;
+    }
     
     
 }
